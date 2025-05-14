@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Cost Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="popup-container">
+        <div class="popup-header-controls"> <h1 class="popup-main-title" data-i18n="meetingCostTrackerPopupTitle">Meeting Cost Tracker</h1>
+            <div class="language-selector-popup-container">
+                <select id="popupLanguageSelector">
+                    <option value="en" data-i18n="langEnglish">English</option>
+                    <option value="de" data-i18n="langGerman">German</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="popup-card meeting-tracker-card">
+            <div class="meeting-inputs">
+                <div class="meeting-input-group">
+                    <label for="popupMeetingAttendees" data-i18n="meetingAttendeesLabel">Attendees</label>
+                    <input type="number" id="popupMeetingAttendees" value="5" min="1">
+                </div>
+                <div class="meeting-input-group">
+                    <label for="popupMeetingAvgHourlySalary" data-i18n="meetingAvgHourlySalaryLabel">Avg. Hourly Salary</label>
+                    <input type="number" id="popupMeetingAvgHourlySalary" value="50" min="0">
+                </div>
+                <div class="meeting-input-group">
+                    <label for="popupMeetingExpectedDuration" data-i18n="meetingExpectedDurationLabel">Expected Duration (min)</label>
+                    <input type="number" id="popupMeetingExpectedDuration" value="60" min="1">
+                </div>
+                <div class="meeting-input-group">
+                    <label for="popupMeetingSalaryCurrency" data-i18n="meetingSalaryCurrencyLabel">Currency</label>
+                    <select id="popupMeetingSalaryCurrency">
+                        <option value="CHF" data-symbol="CHF" selected>CHF</option>
+                        <option value="USD" data-symbol="$">USD</option>
+                        <option value="EUR" data-symbol="€">EUR</option>
+                        <option value="GBP" data-symbol="£">GBP</option>
+                        <option value="CNY" data-symbol="¥">CNY</option>
+                        <option value="JPY" data-symbol="¥">JPY</option>
+                    </select>
+                </div>
+            </div>
+            <div class="meeting-controls-popup">
+                <button id="popupStartMeetingButton" class="meeting-button start" data-i18n="startMeetingButtonPopup">Start Meeting</button>
+                <button id="popupStopMeetingButton" class="meeting-button stop" data-i18n="stopMeetingButtonPopup" style="display:none;">Stop Meeting</button>
+            </div>
+            <div class="meeting-live-display-popup">
+                <p><span data-i18n="elapsedTimeLabel">Elapsed Time:</span> <span id="popupMeetingElapsedTime">00:00:00</span></p>
+                <p><span data-i18n="currentMeetingCostLabel">Current Cost:</span> <span id="popupCurrentMeetingCost" class="cost-value-popup">--</span></p>
+                <p id="projectedMeetingCostContainer" style="display:none;"><span data-i18n="projectedMeetingCostLabel">Projected Cost:</span> <span id="popupProjectedMeetingCost" class="cost-value-popup projected">--</span></p>
+            </div>
+        </div>
+
+        <div id="loadingMessage" class="loading-message" data-i18n="loadingData" style="display:none;">Loading...</div>
+        </div>
+    <script src="popup.js"></script>
+</body>
+</html>

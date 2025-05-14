@@ -1,0 +1,184 @@
+/* style.css - General Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    background-color: #f0f2f5;
+    color: #333;
+    font-size: 14px;
+}
+
+/* --- Options Page Styles (Minimal for Language Settings if kept) --- */
+.options-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 30px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.options-header { /* This is for the options page if it exists */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #5a95ca;
+}
+
+.options-header h1 {
+    color: #5a95ca;
+    font-size: 22px;
+    margin: 0;
+}
+
+/* --- Popup Styles --- */
+.popup-container {
+    width: 330px;
+    padding: 12px; /* Reduced padding a bit */
+    background-color: #ffffff;
+    color: #333;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.popup-header-controls { /* For title and lang selector in popup */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #5a95ca;
+}
+
+.popup-main-title {
+    color: #5a95ca;
+    font-size: 20px; /* Slightly smaller to fit with lang selector */
+    font-weight: 600;
+    margin: 0; /* Removed margin */
+    padding: 0; /* Removed padding */
+    border-bottom: none; /* Border is on parent now */
+    text-align: left; /* Align title to left */
+}
+
+.language-selector-popup-container select#popupLanguageSelector {
+    padding: 5px 8px;
+    font-size: 11px; /* Smaller font for popup selector */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    margin-left: 10px; /* Space from title */
+}
+
+
+/* Live Meeting Tracker Styles (Popup) */
+.meeting-tracker-card {
+    padding: 10px;
+    background-color: #f0f8ff;
+    border: 1px solid #d6eaf8;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+
+.meeting-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 10px;
+    margin-bottom: 10px;
+}
+.meeting-input-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+}
+.meeting-input-group label {
+    font-size: 10px; /* Even smaller label */
+    color: #555;
+    margin-bottom: 3px;
+    white-space: nowrap;
+}
+.meeting-input-group input[type="number"],
+.meeting-input-group select {
+    width: 100%;
+    padding: 6px 7px;
+    font-size: 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.meeting-input-group input:focus,
+.meeting-input-group select:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    outline: none;
+}
+
+.meeting-controls-popup {
+    text-align: center;
+    margin-bottom: 10px;
+}
+.meeting-button {
+    padding: 7px 14px;
+    font-size: 12px;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    margin: 0 5px;
+    transition: background-color 0.2s ease;
+}
+.meeting-button.start { background-color: #28a745; }
+.meeting-button.start:hover { background-color: #218838; }
+.meeting-button.stop { background-color: #dc3545; }
+.meeting-button.stop:hover { background-color: #c82333; }
+
+.meeting-live-display-popup p {
+    margin: 5px 0;
+    font-size: 13px;
+    color: #333;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+}
+.meeting-live-display-popup p span:first-child {
+    color: #495057;
+    font-weight: 500;
+}
+.cost-value-popup {
+    font-weight: bold;
+    color: #c0392b;
+}
+.cost-value-popup.projected {
+    color: #7f8c8d;
+}
+#popupMeetingElapsedTime {
+    font-weight: bold;
+    color: #17a2b8;
+}
+
+.popup-actions { /* For the (now removed) settings link */
+    margin-top: 10px;
+    text-align: center;
+}
+
+.settings-link { /* If you re-add a settings link */
+    color: #007bff;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 3px 0;
+}
+
+.settings-link:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+
+.loading-message {
+    padding: 8px;
+    margin-top: 10px;
+    color: #555;
+    font-size: 12px;
+}

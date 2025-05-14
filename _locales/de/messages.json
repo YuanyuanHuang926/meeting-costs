@@ -1,0 +1,19 @@
+{
+  "extName": { "message": "Live Meeting-Kostenrechner" },
+  "meetingCostTrackerPopupTitle": { "message": "Meeting-Kostenrechner" },
+  "meetingAttendeesLabel": { "message": "Teilnehmer" },
+  "meetingAvgHourlySalaryLabel": { "message": "Ø Std.-Lohn" },
+  "meetingExpectedDurationLabel": { "message": "Erw. Dauer (Min.)" },
+  "meetingSalaryCurrencyLabel": { "message": "Währung" },
+  "startMeetingButtonPopup": { "message": "Meeting starten" },
+  "stopMeetingButtonPopup": { "message": "Meeting stoppen" },
+  "elapsedTimeLabel": { "message": "Verstrichene Zeit:" },
+  "currentMeetingCostLabel": { "message": "Aktuelle Kosten:" },
+  "projectedMeetingCostLabel": { "message": "Vorauss. Kosten:" },
+  "loadingData": { "message": "Lädt..." },
+  "invalidAttendees": { "message": "Bitte geben Sie eine gültige Teilnehmerzahl ein (1 oder mehr)." },
+  "invalidAvgHourlySalary": { "message": "Bitte geben Sie einen gültigen durchschnittlichen Stundenlohn ein (größer als 0)." },
+  "invalidExpectedDuration": { "message": "Bitte geben Sie eine gültige erwartete Meetingdauer ein (1 Minute oder mehr)." },
+  "langEnglish": { "message": "Englisch" },
+  "langGerman": { "message": "Deutsch" }
+}

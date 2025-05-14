@@ -1,0 +1,19 @@
+{
+  "extName": { "message": "Live Meeting Cost Tracker" },
+  "meetingCostTrackerPopupTitle": { "message": "Meeting Cost Tracker" },
+  "meetingAttendeesLabel": { "message": "Attendees" },
+  "meetingAvgHourlySalaryLabel": { "message": "Avg. Hourly Salary" },
+  "meetingExpectedDurationLabel": { "message": "Expected Duration (min)" },
+  "meetingSalaryCurrencyLabel": { "message": "Currency" },
+  "startMeetingButtonPopup": { "message": "Start Meeting" },
+  "stopMeetingButtonPopup": { "message": "Stop Meeting" },
+  "elapsedTimeLabel": { "message": "Elapsed Time:" },
+  "currentMeetingCostLabel": { "message": "Current Cost:" },
+  "projectedMeetingCostLabel": { "message": "Projected Cost:" },
+  "loadingData": { "message": "Loading..." },
+  "invalidAttendees": { "message": "Please enter a valid number of attendees (1 or more)." },
+  "invalidAvgHourlySalary": { "message": "Please enter a valid average hourly salary (greater than 0)." },
+  "invalidExpectedDuration": { "message": "Please enter a valid expected meeting duration (1 or more minutes)." },
+  "langEnglish": { "message": "English" },
+  "langGerman": { "message": "German" }
+}
