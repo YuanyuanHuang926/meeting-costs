@@ -8,7 +8,8 @@
 </head>
 <body>
     <div class="popup-container">
-        <div class="popup-header-controls"> <h1 class="popup-main-title" data-i18n="meetingCostTrackerPopupTitle">Meeting Cost Tracker</h1>
+        <div class="popup-header-controls">
+            <h1 class="popup-main-title" data-i18n="meetingCostTrackerPopupTitle">Meeting Cost Tracker</h1>
             <div class="language-selector-popup-container">
                 <select id="popupLanguageSelector">
                     <option value="en" data-i18n="langEnglish">English</option>
@@ -51,11 +52,18 @@
                 <p><span data-i18n="elapsedTimeLabel">Elapsed Time:</span> <span id="popupMeetingElapsedTime">00:00:00</span></p>
                 <p><span data-i18n="currentMeetingCostLabel">Current Cost:</span> <span id="popupCurrentMeetingCost" class="cost-value-popup">--</span></p>
                 <p id="projectedMeetingCostContainer" style="display:none;"><span data-i18n="projectedMeetingCostLabel">Projected Cost:</span> <span id="popupProjectedMeetingCost" class="cost-value-popup projected">--</span></p>
+
+                <div id="meetingCostProgressBarContainer" class="progress-bar-container meeting-progress-bar-container" style="display:none;">
+                    <div class="progress-bar" id="meetingCostProgressBar">
+                        <span class="progress-bar-fill" id="meetingCostProgressBarFill"></span>
+                    </div>
+                </div>
+                <p id="meetingCostProgressPercentage" class="progress-percentage meeting-progress-percentage" style="display:none;">0%</p>
             </div>
         </div>
 
         <div id="loadingMessage" class="loading-message" data-i18n="loadingData" style="display:none;">Loading...</div>
-        </div>
+    </div>
     <script src="popup.js"></script>
 </body>
 </html>

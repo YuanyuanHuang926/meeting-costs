@@ -10,6 +10,7 @@
   "elapsedTimeLabel": { "message": "Verstrichene Zeit:" },
   "currentMeetingCostLabel": { "message": "Aktuelle Kosten:" },
   "projectedMeetingCostLabel": { "message": "Vorauss. Kosten:" },
+  "exceededCostLabel": { "message": "Überschritten um:" },
   "loadingData": { "message": "Lädt..." },
   "invalidAttendees": { "message": "Bitte geben Sie eine gültige Teilnehmerzahl ein (1 oder mehr)." },
   "invalidAvgHourlySalary": { "message": "Bitte geben Sie einen gültigen durchschnittlichen Stundenlohn ein (größer als 0)." },

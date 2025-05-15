@@ -1,6 +1,4 @@
-// popup.js
 document.addEventListener('DOMContentLoaded', () => {
-    // DOM Elements for Live Meeting Cost Tracker
     const popupMeetingAttendeesInput = document.getElementById('popupMeetingAttendees');
     const popupMeetingAvgHourlySalaryInput = document.getElementById('popupMeetingAvgHourlySalary');
     const popupMeetingExpectedDurationInput = document.getElementById('popupMeetingExpectedDuration');
@@ -12,10 +10,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const projectedMeetingCostContainerEl = document.getElementById('projectedMeetingCostContainer');
     const popupProjectedMeetingCostEl = document.getElementById('popupProjectedMeetingCost');
 
-    const popupLanguageSelector = document.getElementById('popupLanguageSelector'); // New
+    const meetingCostProgressBarContainerEl = document.getElementById('meetingCostProgressBarContainer');
+    const meetingCostProgressBarFillEl = document.getElementById('meetingCostProgressBarFill');
+    const meetingCostProgressPercentageEl = document.getElementById('meetingCostProgressPercentage');
+
+    const exceededMeetingCostContainerEl = document.getElementById('exceededMeetingCostContainer');
+    const popupExceededMeetingCostEl = document.getElementById('popupExceededMeetingCost');
+
+    const popupLanguageSelector = document.getElementById('popupLanguageSelector');
     const loadingMessageEl = document.getElementById('loadingMessage');
 
-    let currentMessages = null; // To store fetched messages for the current language
+    let currentMessages = null;
+
+    console.log("[Popup.js] DOMContentLoaded - Script loaded.");
 
     function getMeetingCurrencySymbol(currencyCode) {
         const selectedOption = popupMeetingSalaryCurrencySelect.querySelector(`option[value="${currencyCode}"]`);
@@ -34,12 +41,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateMeetingTrackerUI(meetingState) {
+        console.log("[Popup.js] updateMeetingTrackerUI called with state:", JSON.parse(JSON.stringify(meetingState || {})));
+
+        const progressBarElementsExist = meetingCostProgressBarContainerEl && meetingCostProgressPercentageEl && meetingCostProgressBarFillEl;
+        if (!progressBarElementsExist) {
+            console.error("[Popup.js] One or more progress bar DOM elements are missing!");
+        }
+        const exceededCostElementsExist = exceededMeetingCostContainerEl && popupExceededMeetingCostEl;
+         if (!exceededCostElementsExist) {
+            console.error("[Popup.js] One or more exceeded cost DOM elements are missing!");
+        }
+
+
         if (!meetingState) {
             popupMeetingElapsedTimeEl.textContent = formatElapsedTime(0);
-            const initialCurrency = popupMeetingSalaryCurrencySelect.value;
+            const initialCurrency = popupMeetingSalaryCurrencySelect.value || 'CHF';
             const initialSymbol = getMeetingCurrencySymbol(initialCurrency);
             popupCurrentMeetingCostEl.textContent = `${initialSymbol}0.00`;
-            projectedMeetingCostContainerEl.style.display = 'none';
+            if(projectedMeetingCostContainerEl) projectedMeetingCostContainerEl.style.display = 'none';
+            if(exceededCostElementsExist) exceededMeetingCostContainerEl.style.display = 'none';
+
+            if (progressBarElementsExist) {
+                meetingCostProgressBarContainerEl.style.display = 'none';
+                meetingCostProgressPercentageEl.style.display = 'none';
+            }
+
             popupStartMeetingButton.style.display = 'inline-block';
             popupStopMeetingButton.style.display = 'none';
             popupMeetingAttendeesInput.disabled = false;
@@ -54,7 +80,29 @@ document.addEventListener('DOMContentLoaded', () => {
         if (popupMeetingElapsedTimeEl) popupMeetingElapsedTimeEl.textContent = formatElapsedTime(meetingState.elapsedSeconds || 0);
         if (popupCurrentMeetingCostEl) popupCurrentMeetingCostEl.textContent = `${meetingSymbol}${(meetingState.currentCost || 0).toFixed(2)}`;
 
+        if (meetingState.projectedCost > 0) {
+            if (projectedMeetingCostContainerEl && popupProjectedMeetingCostEl) {
+                popupProjectedMeetingCostEl.textContent = `${meetingSymbol}${meetingState.projectedCost.toFixed(2)}`;
+                projectedMeetingCostContainerEl.style.display = 'block';
+            }
+
+            if (exceededCostElementsExist) {
+                if (meetingState.currentCost > meetingState.projectedCost) {
+                    const exceededAmount = meetingState.currentCost - meetingState.projectedCost;
+                    popupExceededMeetingCostEl.textContent = `${meetingSymbol}${exceededAmount.toFixed(2)}`;
+                    exceededMeetingCostContainerEl.style.display = 'block';
+                } else {
+                    exceededMeetingCostContainerEl.style.display = 'none';
+                }
+            }
+        } else {
+            if (projectedMeetingCostContainerEl) projectedMeetingCostContainerEl.style.display = 'none';
+            if (exceededCostElementsExist) exceededMeetingCostContainerEl.style.display = 'none';
+        }
+
+
         if (meetingState.isRunning) {
+            console.log("[Popup.js] Meeting is running. Updating UI for running state.");
             popupStartMeetingButton.style.display = 'none';
             popupStopMeetingButton.style.display = 'inline-block';
             popupMeetingAttendeesInput.disabled = true;
@@ -67,21 +115,62 @@ document.addEventListener('DOMContentLoaded', () => {
             if(meetingState.expectedDurationMinutes) popupMeetingExpectedDurationInput.value = meetingState.expectedDurationMinutes;
             if(meetingState.currency) popupMeetingSalaryCurrencySelect.value = meetingState.currency;
 
-            if (projectedMeetingCostContainerEl && popupProjectedMeetingCostEl && meetingState.projectedCost > 0) {
-                popupProjectedMeetingCostEl.textContent = `${meetingSymbol}${meetingState.projectedCost.toFixed(2)}`;
-                projectedMeetingCostContainerEl.style.display = 'block';
-            } else if (projectedMeetingCostContainerEl) {
-                projectedMeetingCostContainerEl.style.display = 'none';
+            if (progressBarElementsExist && meetingState.projectedCost > 0) {
+                console.log("[Popup.js] Showing progress bar for running meeting.");
+                meetingCostProgressBarContainerEl.style.display = 'block';
+                meetingCostProgressPercentageEl.style.display = 'block';
+
+                const progressPercentValue = (meetingState.currentCost / meetingState.projectedCost) * 100;
+                const barFillPercent = Math.min(100, progressPercentValue); // Bar visually caps at 100%
+
+                meetingCostProgressBarFillEl.style.width = `${barFillPercent}%`;
+                meetingCostProgressPercentageEl.textContent = `${Math.round(progressPercentValue)}%`; // Text shows actual %
+
+                if (progressPercentValue >= 85) {
+                    meetingCostProgressBarFillEl.classList.add('warning');
+                } else {
+                    meetingCostProgressBarFillEl.classList.remove('warning');
+                }
+            } else {
+                if (progressBarElementsExist) {
+                    console.log("[Popup.js] Hiding progress bar (running, but no projected cost or elements missing).");
+                    meetingCostProgressBarContainerEl.style.display = 'none';
+                    meetingCostProgressPercentageEl.style.display = 'none';
+                }
             }
 
         } else {
+            console.log("[Popup.js] Meeting is NOT running. Updating UI for stopped state.");
             popupStartMeetingButton.style.display = 'inline-block';
             popupStopMeetingButton.style.display = 'none';
             popupMeetingAttendeesInput.disabled = false;
             popupMeetingAvgHourlySalaryInput.disabled = false;
             popupMeetingExpectedDurationInput.disabled = false;
             popupMeetingSalaryCurrencySelect.disabled = false;
-            if (projectedMeetingCostContainerEl) projectedMeetingCostContainerEl.style.display = 'none';
+
+            if (progressBarElementsExist && meetingState.elapsedSeconds > 0 && meetingState.projectedCost > 0) {
+                 console.log("[Popup.js] Showing final progress bar for stopped meeting.");
+                 meetingCostProgressBarContainerEl.style.display = 'block';
+                 meetingCostProgressPercentageEl.style.display = 'block';
+                 const progressPercentValue = (meetingState.currentCost / meetingState.projectedCost) * 100;
+                 const barFillPercent = Math.min(100, progressPercentValue);
+
+                 meetingCostProgressBarFillEl.style.width = `${barFillPercent}%`;
+                 meetingCostProgressPercentageEl.textContent = `${Math.round(progressPercentValue)}%`;
+
+                 if (progressPercentValue >= 85) {
+                    meetingCostProgressBarFillEl.classList.add('warning');
+                 } else {
+                    meetingCostProgressBarFillEl.classList.remove('warning');
+                 }
+            } else {
+                if (progressBarElementsExist) {
+                    console.log("[Popup.js] Hiding progress bar (stopped, no history or elements missing).");
+                    meetingCostProgressBarContainerEl.style.display = 'none';
+                    meetingCostProgressPercentageEl.style.display = 'none';
+                    meetingCostProgressBarFillEl.classList.remove('warning');
+                }
+            }
         }
     }
 
@@ -93,13 +182,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(messagesURL);
             if (response.ok) {
                 currentMessages = await response.json();
-                console.log(`[Popup.js] Successfully fetched and parsed messages for ${langCode}:`, currentMessages);
+                console.log(`[Popup.js] Successfully fetched and parsed messages for ${langCode}.`);
             } else {
-                console.warn(`[Popup.js] Failed to fetch messages for ${langCode}. Status: ${response.status}. Falling back to chrome.i18n.getMessage().`);
+                console.warn(`[Popup.js] Failed to fetch messages for ${langCode}. Status: ${response.status}.`);
                 currentMessages = null;
             }
         } catch (error) {
-            console.error(`[Popup.js] Error fetching messages for ${langCode}:`, error, ". Falling back to chrome.i18n.getMessage().");
+            console.error(`[Popup.js] Error fetching messages for ${langCode}:`, error);
             currentMessages = null;
         }
 
@@ -112,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 translatedString = chrome.i18n.getMessage(key);
                 if (!translatedString && key) {
-                     console.warn(`[Popup.js] No translation for key: ${key} (using fallback i18n API or key missing for lang ${langCode})`);
+                     console.warn(`[Popup.js] No translation for key: ${key} (lang ${langCode})`);
                 }
             }
 
@@ -121,8 +210,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     el.value = translatedString;
                     el.textContent = translatedString;
                 } else if (el.tagName === 'OPTION') {
-                    // For option elements, we set textContent for the display name of the language
-                    // The value attribute should remain the language code (e.g., "en", "de")
                     el.textContent = translatedString;
                 }
                 else {
@@ -138,88 +225,102 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             translatedPageTitle = chrome.i18n.getMessage(pageTitleKey);
         }
-        if (translatedPageTitle) {
-            document.title = translatedPageTitle;
-        } else {
-             console.warn(`[Popup.js] No translation found for page title key: ${pageTitleKey}`);
-             document.title = "Meeting Cost Tracker"; // Fallback title
-        }
+        document.title = translatedPageTitle || "Meeting Cost Tracker";
     }
 
     async function loadLanguagePreferenceAndLocalize() {
-        const data = await chrome.storage.sync.get('appSettings'); // Changed storage key
+        const data = await chrome.storage.sync.get('appSettings');
         const lang = (data.appSettings && data.appSettings.language) ? data.appSettings.language : 'en';
-        popupLanguageSelector.value = lang;
+        if (popupLanguageSelector) popupLanguageSelector.value = lang;
         await fetchAndApplyLocalizedStrings(lang);
     }
 
-    // --- Event Listeners for Meeting Tracker ---
-    popupStartMeetingButton.addEventListener('click', () => {
-        const attendees = parseInt(popupMeetingAttendeesInput.value);
-        const avgHourlySalary = parseFloat(popupMeetingAvgHourlySalaryInput.value);
-        const expectedDurationMinutes = parseInt(popupMeetingExpectedDurationInput.value);
-        const currency = popupMeetingSalaryCurrencySelect.value;
+    if (popupStartMeetingButton) {
+        popupStartMeetingButton.addEventListener('click', () => {
+            console.log("[Popup.js] Start Meeting button clicked.");
+            const attendees = parseInt(popupMeetingAttendeesInput.value);
+            const avgHourlySalary = parseFloat(popupMeetingAvgHourlySalaryInput.value);
+            const expectedDurationMinutes = parseInt(popupMeetingExpectedDurationInput.value);
+            const currency = popupMeetingSalaryCurrencySelect.value;
 
-        let errorKey = null;
-        if (isNaN(attendees) || attendees < 1) errorKey = "invalidAttendees";
-        else if (isNaN(avgHourlySalary) || avgHourlySalary <= 0) errorKey = "invalidAvgHourlySalary";
-        else if (isNaN(expectedDurationMinutes) || expectedDurationMinutes < 1) errorKey = "invalidExpectedDuration";
+            let errorKey = null;
+            if (isNaN(attendees) || attendees < 1) errorKey = "invalidAttendees";
+            else if (isNaN(avgHourlySalary) || avgHourlySalary <= 0) errorKey = "invalidAvgHourlySalary";
+            else if (isNaN(expectedDurationMinutes) || expectedDurationMinutes < 1) errorKey = "invalidExpectedDuration";
 
-        if (errorKey) {
-            const errorMessage = (currentMessages && currentMessages[errorKey]) ? currentMessages[errorKey].message : chrome.i18n.getMessage(errorKey);
-            alert(errorMessage || "Invalid input.");
-            return;
-        }
-        chrome.runtime.sendMessage({
-            type: "startMeetingTimer",
-            data: { attendees, avgHourlySalary, expectedDurationMinutes, currency }
+            if (errorKey) {
+                const errorMessage = (currentMessages && currentMessages[errorKey]) ? currentMessages[errorKey].message : chrome.i18n.getMessage(errorKey);
+                alert(errorMessage || "Invalid input.");
+                return;
+            }
+            console.log("[Popup.js] Sending startMeetingTimer message to background with data:", { attendees, avgHourlySalary, expectedDurationMinutes, currency });
+            chrome.runtime.sendMessage({
+                type: "startMeetingTimer",
+                data: { attendees, avgHourlySalary, expectedDurationMinutes, currency }
+            }, response => {
+                if (chrome.runtime.lastError) {
+                    console.error("[Popup.js] Error sending startMeetingTimer message:", chrome.runtime.lastError.message);
+                } else {
+                    console.log("[Popup.js] Background responded to startMeetingTimer:", response);
+                }
+            });
         });
-    });
-
-    popupStopMeetingButton.addEventListener('click', () => {
-        chrome.runtime.sendMessage({ type: "stopMeetingTimer" });
-    });
-
-    // --- Language Selector Logic ---
-    popupLanguageSelector.addEventListener('change', async (event) => {
-        const newLanguage = event.target.value;
-        console.log("[Popup.js] Language selected:", newLanguage);
-        // Save the new language preference
-        await chrome.storage.sync.set({ appSettings: { language: newLanguage } });
-        // Notify background script
-        chrome.runtime.sendMessage({ type: "languageChanged", language: newLanguage });
-        // Re-fetch and apply translations to the current popup view
-        await fetchAndApplyLocalizedStrings(newLanguage);
-    });
+    }
 
 
-    // --- Initial Load and Message Handling ---
+    if (popupStopMeetingButton) {
+        popupStopMeetingButton.addEventListener('click', () => {
+            console.log("[Popup.js] Stop Meeting button clicked.");
+            chrome.runtime.sendMessage({ type: "stopMeetingTimer" }, response => {
+                 if (chrome.runtime.lastError) {
+                    console.error("[Popup.js] Error sending stopMeetingTimer message:", chrome.runtime.lastError.message);
+                } else {
+                    console.log("[Popup.js] Background responded to stopMeetingTimer:", response);
+                }
+            });
+        });
+    }
+
+    if (popupLanguageSelector) {
+        popupLanguageSelector.addEventListener('change', async (event) => {
+            const newLanguage = event.target.value;
+            console.log("[Popup.js] Language selected:", newLanguage);
+            await chrome.storage.sync.set({ appSettings: { language: newLanguage } });
+            chrome.runtime.sendMessage({ type: "languageChanged", language: newLanguage });
+            await fetchAndApplyLocalizedStrings(newLanguage);
+        });
+    }
+
+
     async function initializePopup() {
+        console.log("[Popup.js] Initializing popup...");
         if(loadingMessageEl) loadingMessageEl.style.display = 'block';
-        await loadLanguagePreferenceAndLocalize(); // Load language and initial strings
+        await loadLanguagePreferenceAndLocalize();
 
         chrome.runtime.sendMessage({ type: "getMeetingTrackerUIData" }, (response) => {
+            console.log("[Popup.js] Received getMeetingTrackerUIData response:", response);
             if (loadingMessageEl) loadingMessageEl.style.display = 'none';
             if (chrome.runtime.lastError) {
                 console.error("[Popup.js] Error getting UI data from background:", chrome.runtime.lastError.message);
-                updateMeetingTrackerUI(null); // Initialize meeting UI to default
+                updateMeetingTrackerUI(null);
                 return;
             }
             if (response) {
                 updateMeetingTrackerUI(response.meetingState);
             } else {
+                console.warn("[Popup.js] No response or empty response for getMeetingTrackerUIData.");
                 updateMeetingTrackerUI(null);
             }
         });
     }
 
-
-    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    chrome.runtime.onMessage.addListener((message) => {
+        console.log("[Popup.js] Message received from background:", message);
         if (message.type === "meetingStatusUpdate") {
             updateMeetingTrackerUI(message.data);
         }
         return true;
     });
 
-    initializePopup(); // Call the main initialization function
+    initializePopup();
 });

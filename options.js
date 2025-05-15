@@ -1,6 +1,4 @@
-// options.js
 document.addEventListener('DOMContentLoaded', () => {
-    // DOM Elements for main settings
     const monthlySalaryInput = document.getElementById('monthlySalary');
     const annualBonusInput = document.getElementById('annualBonus');
     const incomeCurrencySelect = document.getElementById('incomeCurrency');
@@ -15,18 +13,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const monthlySalaryCurrencySymbolEl = document.getElementById('monthlySalaryCurrencySymbol');
     const annualBonusCurrencySymbolEl = document.getElementById('annualBonusCurrencySymbol');
 
-    // DOM Elements for Meeting Cost Calculator
     const meetingAttendeesInput = document.getElementById('meetingAttendees');
     const meetingAvgSalaryInput = document.getElementById('meetingAvgSalary');
     const meetingSalaryCurrencySelect = document.getElementById('meetingSalaryCurrency');
-    const startMeetingTimerButton = document.getElementById('startMeetingTimerButton'); // Renamed
-    const stopMeetingTimerButton = document.getElementById('stopMeetingTimerButton');   // New button
-    const meetingElapsedTimeEl = document.getElementById('meetingElapsedTime');       // New display
-    const currentMeetingCostValueEl = document.getElementById('currentMeetingCostValue'); // Renamed (was calculatedMeetingCostValueEl)
+    const startMeetingTimerButton = document.getElementById('startMeetingTimerButton');
+    const stopMeetingTimerButton = document.getElementById('stopMeetingTimerButton');
+    const meetingElapsedTimeEl = document.getElementById('meetingElapsedTime');
+    const currentMeetingCostValueEl = document.getElementById('currentMeetingCostValue');
 
     let openedDueToInstallFlag = false;
     let currentMessages = null;
-    let meetingTimerInterval = null; // Interval ID for the meeting timer
+    let meetingTimerInterval = null;
     let meetingSecondsElapsed = 0;
     let meetingCostPerSecond = 0;
     let currentMeetingTotalCost = 0;
@@ -70,7 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
             lunchBreakHours: parseFloat(lunchBreakHoursInput.value) || 0,
             language: languageSelector.value
         };
-        console.log("[Options.js] Saving language as:", settingsToSave.language);
 
         chrome.storage.sync.set({ paydaySettings: settingsToSave }, () => {
             let messageKey = "settingsSaved";
@@ -80,7 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 messageKey = "settingsSavedFirstTime";
                 messageDuration = 6000;
                 chrome.storage.local.remove('openedOptionsDueToInstall', () => {
-                    console.log("[Options.js] Cleared 'openedOptionsDueToInstall' flag.");
                 });
                 openedDueToInstallFlag = false;
             }
@@ -119,9 +114,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function loadOptions() {
         chrome.storage.sync.get('paydaySettings', (data) => {
             const currentSettings = data.paydaySettings || optionPageDefaultSettings;
-            console.log("[Options.js] Loaded settings:", JSON.parse(JSON.stringify(currentSettings)));
-            console.log("[Options.js] Language loaded from storage:", currentSettings.language);
-
             monthlySalaryInput.value = currentSettings.monthlySalary;
             annualBonusInput.value = currentSettings.annualBonus;
             incomeCurrencySelect.value = currentSettings.incomeCurrency;
@@ -138,7 +130,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function fetchAndApplyLocalizedStrings(langCode) {
-        console.log(`[Options.js] Attempting to fetch messages for language: ${langCode}`);
         const messagesURL = chrome.runtime.getURL(`_locales/${langCode}/messages.json`);
         let messagesToUse = null;
 
@@ -215,7 +206,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Real-time Meeting Cost Calculator Logic ---
     function formatElapsedTime(totalSeconds) {
         const hours = Math.floor(totalSeconds / 3600);
         const minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -242,7 +232,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Assumptions for average salary calculation:
         const workdaysPerYear = 260;
         const workHoursPerDay = 8;
         const workSecondsPerYear = workHoursPerDay * 60 * 60 * workdaysPerYear;
@@ -280,11 +269,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         startMeetingTimerButton.style.display = 'inline-block';
         stopMeetingTimerButton.style.display = 'none';
-        // Re-enable inputs
         meetingAttendeesInput.disabled = false;
         meetingAvgSalaryInput.disabled = false;
         meetingSalaryCurrencySelect.disabled = false;
-        // The final cost and time remain displayed until a new timer starts
     }
 
     if (startMeetingTimerButton) {
@@ -294,7 +281,6 @@ document.addEventListener('DOMContentLoaded', () => {
         stopMeetingTimerButton.addEventListener('click', handleStopMeetingTimer);
     }
 
-    // --- Event Listeners for Main Settings ---
     saveButton.addEventListener('click', () => {
         saveOptions(false);
     });
@@ -308,9 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateInputCurrencySymbols(event.target.value);
     });
 
-    // Initial load
     loadOptions();
-    // Initialize meeting display
     meetingElapsedTimeEl.textContent = formatElapsedTime(0);
     currentMeetingCostValueEl.textContent = `${meetingSalaryCurrencySelect.options[meetingSalaryCurrencySelect.selectedIndex].dataset.symbol || meetingSalaryCurrencySelect.value}0.00`;
 });
