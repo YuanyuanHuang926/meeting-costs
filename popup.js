@@ -121,10 +121,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 meetingCostProgressPercentageEl.style.display = 'block';
 
                 const progressPercentValue = (meetingState.currentCost / meetingState.projectedCost) * 100;
-                const barFillPercent = Math.min(100, progressPercentValue); // Bar visually caps at 100%
+                const barFillPercent = Math.min(100, progressPercentValue);
 
                 meetingCostProgressBarFillEl.style.width = `${barFillPercent}%`;
-                meetingCostProgressPercentageEl.textContent = `${Math.round(progressPercentValue)}%`; // Text shows actual %
+                meetingCostProgressPercentageEl.textContent = `${Math.round(progressPercentValue)}%`;
 
                 if (progressPercentValue >= 85) {
                     meetingCostProgressBarFillEl.classList.add('warning');
