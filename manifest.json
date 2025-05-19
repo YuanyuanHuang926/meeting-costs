@@ -4,8 +4,7 @@
   "version": "1.0.0",
   "description": "Tracks the accumulating cost of meetings in real-time.",
   "permissions": [
-    "storage",
-    "alarms"
+    "storage"
   ],
   "action": {
     "default_popup": "popup.html",
