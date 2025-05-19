@@ -1,4 +1,3 @@
-/* style.css - General Styles */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
@@ -7,7 +6,6 @@ body {
     font-size: 14px;
 }
 
-/* --- Options Page Styles (Minimal for Language Settings if kept) --- */
 .options-container {
     width: 100%;
     max-width: 500px;
@@ -33,7 +31,6 @@ body {
     margin: 0;
 }
 
-/* --- Popup Styles --- */
 .popup-container {
     width: 330px;
     padding: 12px;
@@ -71,7 +68,6 @@ body {
     margin-left: 10px;
 }
 
-/* Live Meeting Tracker Styles (Popup) */
 .meeting-tracker-card {
     padding: 10px;
     background-color: #f0f8ff;
@@ -152,12 +148,12 @@ body {
 .cost-value-popup.projected {
     color: #7f8c8d;
 }
-.cost-value-popup.exceeded { /* Style for the exceeded amount text */
-    color: #e74c3c; /* A slightly brighter red for emphasis */
+.cost-value-popup.exceeded {
+    color: #e74c3c;
     font-weight: bold;
 }
-.exceeded-cost-container span:first-child { /* Style for "Exceeded by:" label */
-    color: #c0392b; /* Match the current cost red */
+.exceeded-cost-container span:first-child {
+    color: #c0392b;
     font-weight: bold;
 }
 
@@ -166,30 +162,89 @@ body {
     color: #17a2b8;
 }
 
-/* Meeting Cost Progress Bar Styles */
 .meeting-progress-bar-container {
     width: 100%;
-    height: 10px;
+    height: 14px;
     background-color: #e9ecef;
-    border-radius: 5px;
+    border-radius: 7px;
     overflow: hidden;
     margin-top: 8px;
+    display: flex;
+    position: relative;
 }
 .meeting-progress-bar-container .progress-bar {
+    width: 100%;
     height: 100%;
-    border-radius: 5px;
+    border-radius: 7px;
+    display: flex;
 }
-.meeting-progress-bar-container .progress-bar-fill {
-    display: block;
-    width: 0%;
+
+.progress-bar-segment {
     height: 100%;
-    background-color: #5a95ca;
-    border-radius: 5px;
-    transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
+    transition: width 0.3s ease-in-out, background-image 0.3s ease-in-out, background-color 0.3s ease-in-out;
+    position: relative;
+    overflow: hidden;
+    background-size: 20px 20px;
 }
-.meeting-progress-bar-container .progress-bar-fill.warning {
+
+.progress-bar-segment::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(255,255,255,0.15));
+    border-radius: 7px 7px 0 0;
+    z-index: 1;
+}
+
+
+.progress-bar-segment.budget {
+
+    background-color: #28a745;
+
+    background-image: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 5px,
+        rgba(255, 255, 255, 0.2) 5px,
+        rgba(255, 255, 255, 0.2) 10px
+    );
+    border-top-left-radius: 7px;
+    border-bottom-left-radius: 7px;
+}
+.progress-bar-segment.budget.warning {
+    background-color: #ffc107;
+
+    background-image: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 5px,
+        rgba(255, 255, 255, 0.25) 5px,
+        rgba(255, 255, 255, 0.25) 10px
+    );
+}
+
+.progress-bar-segment.exceeded {
     background-color: #dc3545;
+     background-image: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 5px,
+        rgba(255, 255, 255, 0.2) 5px,
+        rgba(255, 255, 255, 0.2) 10px
+    );
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
 }
+
+.progress-bar-segment.budget + .progress-bar-segment.exceeded,
+.progress-bar-segment.budget.warning + .progress-bar-segment.exceeded {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
 
 .meeting-progress-percentage {
     font-size: 11px;

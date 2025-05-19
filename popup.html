@@ -14,6 +14,7 @@
                 <select id="popupLanguageSelector">
                     <option value="en" data-i18n="langEnglish">English</option>
                     <option value="de" data-i18n="langGerman">German</option>
+                    <option value="zh" data-i18n="langChinese">Chinese</option>
                 </select>
             </div>
         </div>
@@ -21,19 +22,27 @@
         <div class="popup-card meeting-tracker-card">
             <div class="meeting-inputs">
                 <div class="meeting-input-group">
-                    <label for="popupMeetingAttendees" data-i18n="meetingAttendeesLabel">Attendees</label>
+                    <label for="popupMeetingAttendees">
+                        <span class="label-icon">👥</span> <span data-i18n="meetingAttendeesLabel">Attendees</span>
+                    </label>
                     <input type="number" id="popupMeetingAttendees" value="5" min="1">
                 </div>
                 <div class="meeting-input-group">
-                    <label for="popupMeetingAvgHourlySalary" data-i18n="meetingAvgHourlySalaryLabel">Avg. Hourly Salary</label>
+                    <label for="popupMeetingAvgHourlySalary">
+                        <span class="label-icon">💰</span> <span data-i18n="meetingAvgHourlySalaryLabel">Avg. Hourly Salary</span>
+                    </label>
                     <input type="number" id="popupMeetingAvgHourlySalary" value="50" min="0">
                 </div>
                 <div class="meeting-input-group">
-                    <label for="popupMeetingExpectedDuration" data-i18n="meetingExpectedDurationLabel">Expected Duration (min)</label>
+                    <label for="popupMeetingExpectedDuration">
+                        <span class="label-icon">⏱️</span> <span data-i18n="meetingExpectedDurationLabel">Expected Duration (min)</span>
+                    </label>
                     <input type="number" id="popupMeetingExpectedDuration" value="60" min="1">
                 </div>
                 <div class="meeting-input-group">
-                    <label for="popupMeetingSalaryCurrency" data-i18n="meetingSalaryCurrencyLabel">Currency</label>
+                    <label for="popupMeetingSalaryCurrency">
+                        <span class="label-icon">💱</span> <span data-i18n="meetingSalaryCurrencyLabel">Currency</span>
+                    </label>
                     <select id="popupMeetingSalaryCurrency">
                         <option value="CHF" data-symbol="CHF" selected>CHF</option>
                         <option value="USD" data-symbol="$">USD</option>
@@ -59,7 +68,8 @@
 
                 <div id="meetingCostProgressBarContainer" class="progress-bar-container meeting-progress-bar-container" style="display:none;">
                     <div class="progress-bar" id="meetingCostProgressBar">
-                        <span class="progress-bar-fill" id="meetingCostProgressBarFill"></span>
+                        <span class="progress-bar-segment budget" id="meetingCostProgressBarBudget"></span>
+                        <span class="progress-bar-segment exceeded" id="meetingCostProgressBarExceeded"></span>
                     </div>
                 </div>
                 <p id="meetingCostProgressPercentage" class="progress-percentage meeting-progress-percentage" style="display:none;">0%</p>
